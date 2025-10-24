@@ -217,7 +217,6 @@ def aurigen_projects():
         return {"projects": cur.fetchall()}
 from routes.intelligence import router as intelligence_router
 app.include_router(intelligence_router)
-cd C:\Users\bilal\zavian-system\backend
 git init
 git add .
 git commit -m "chore: initial backend with /intelligence route"
@@ -227,3 +226,20 @@ git remote add origin https://github.com/Bilal9101991/zavian-api.git
 
 git branch -M main
 git push -u origin main
+# main.py
+from fastapi import FastAPI
+from dotenv import load_dotenv
+
+load_dotenv()
+
+app = FastAPI(title="Zavian API")
+
+@app.get("/")
+def home():
+    return {"message": "Zavian backend is running successfully 🚀"}
+
+# If you DIDN'T install swagger-ui-bundle, keep default docs (no extra code).
+
+# Mount the intelligence routes
+from routes.intelligence import router as intelligence_router
+app.include_router(intelligence_router)
