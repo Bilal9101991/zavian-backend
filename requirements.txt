@@ -1,5 +1,6 @@
-fastapi
-uvicorn[standard]
-psycopg[binary]
-python-dotenv
+fastapi==0.120.0
+uvicorn==0.38.0
+openai==1.51.2
+python-dotenv==1.1.1
+psycopg[binary]==3.2.11
 httpx==0.28.1
