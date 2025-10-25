@@ -11,8 +11,12 @@ class Ask(BaseModel):
 
 @router.get("/ping")
 def ping():
-    """Simple health check."""
+    """Confirms route is live and whether the server sees OPENAI_API_KEY."""
     return {"ok": True, "env_has_key": bool(os.getenv("OPENAI_API_KEY"))}
+
+@router.post("/echo")
+def echo(req: Ask):
+    return {"reply": f"ECHO: {req.prompt}"}
 
 @router.post("")
 def intelligence(req: Ask):
@@ -23,12 +27,13 @@ def intelligence(req: Ask):
     client = OpenAI(api_key=key)
 
     try:
-        result = client.chat.completions.create(
-            model="gpt-4o-mini",
+        resp = client.chat.completions.create(
+            model="gpt-4.1-mini",  # broadly available; change if you prefer
             messages=[{"role": "user", "content": req.prompt}],
             temperature=0.7,
+            timeout=15,
         )
-        return {"reply": result.choices[0].message.content}
+        return {"reply": resp.choices[0].message.content}
     except Exception as e:
-        # Return the specific error text so we can see what’s failing
+        # Bubble up the real reason so we can see it from the client/logs
         raise HTTPException(status_code=500, detail=f"{type(e).__name__}: {e}")
