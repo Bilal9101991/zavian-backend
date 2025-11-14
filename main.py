@@ -3,21 +3,33 @@ import os
 import psycopg
 from psycopg.rows import dict_row
 from dotenv import load_dotenv
+from fastapi.middleware.cors import CORSMiddleware
 
-# Load variables from .env file
 load_dotenv()
 
 app = FastAPI(title="Zavian API")
 
+# Allow frontend to call this API
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # later we can restrict to specific domains
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 DATABASE_URL = os.getenv("DATABASE_URL")
+
 
 @app.get("/")
 def home():
     return {"message": "Zavian backend is running 🚀"}
 
+
 @app.get("/status")
 def status():
     return {"status": "ok", "env": os.getenv("ENVIRONMENT", "local")}
+
 
 @app.get("/db/ping")
 def db_ping():
